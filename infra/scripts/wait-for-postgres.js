@@ -1,7 +1,7 @@
 const { exec } = require("node:child_process");
 
 const startTime = Date.now();
-const intervalToUpdateMs = 200;
+const spinnerIntervalMs = 200;
 const timeoutMs = 300000; // 5 min
 
 function checkPostgres() {
@@ -17,12 +17,13 @@ function checkPostgres() {
         }
 
         process.stdout.write(
-          "\n🟢 PostgreSQL is ready and accepting connections!\n\n",
+          "\n🟢 PostgreSQL is ready and accepting connections!\n",
         );
       } else {
         process.stderr.write(
-          "\n🔴 Timeout: PostgreSQL is not accepting connections.\n\n",
+          "\n🔴 Timeout: PostgreSQL is not accepting connections.\n",
         );
+        process.exit(1);
       }
     },
   );
@@ -45,12 +46,12 @@ function showWaitingMessage() {
   ];
 
   const spinnerIndex =
-    Math.floor(Date.now() / intervalToUpdateMs) % spinner.length;
+    Math.floor(Date.now() / spinnerIntervalMs) % spinner.length;
 
   const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(2);
 
   process.stdout.write(
-    `\r\n${spinner[spinnerIndex]} ` +
+    `\r${spinner[spinnerIndex]} ` +
       `Waiting for PostgreSQL to accept connections...\t${elapsedTime}s`,
   );
 }
